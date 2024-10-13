@@ -1,0 +1,11 @@
+FROM alpine AS DOWNLOAD
+
+LABEL maintainer="contact@romnn.com"
+ARG GRPC_HEALTH_PROBE_VERSION=v0.4.11
+
+RUN wget -q -O /bin/grpc_health_probe \
+  https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64
+RUN chmod +x /bin/grpc_health_probe
+
+FROM gcr.io/distroless/base
+COPY --from=DOWNLOAD /bin/grpc_health_probe /bin/grpc_health_probe
